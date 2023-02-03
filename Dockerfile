@@ -1,15 +1,13 @@
 # syntax=docker/dockerfile:1
 
-ARG BUILDER_BASE=rust:1-buster
+ARG BUILDER_BASE=rust:1-bullseye
 
 #############################################################################
 # Build container                                                           #
 #############################################################################
+FROM --platform=linux/amd64 $BUILDER_BASE AS amd64
+FROM --platform=linux/arm64 $BUILDER_BASE AS arm64
 
-FROM --platform=linux/amd64 rust:1-buster AS amd64
-FROM --platform=linux/arm64 rust:1-buster AS arm64
-
-# Use buster instead of bullseye for glibc-2.28
 FROM --platform=$BUILDPLATFORM $BUILDER_BASE AS builder
 
 # Expose build env variables
@@ -67,9 +65,7 @@ RUN cargo search --limit 0
 #############################################################################
 # Release container                                                         #
 #############################################################################
-
-# Use buster instead of bullseye for glibc-2.28
-FROM rust:1-buster AS release
+FROM $BUILDER_BASE AS release
 
 ENV PATH=/usr/local/rust-sdk/bin:$PATH
 ENV PATH=/usr/local/cargo-wrapper/bin:$PATH
