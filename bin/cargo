@@ -100,11 +100,7 @@ fi
 
 cargo "${@:1}"
 
-if which sccache >/dev/null; then
-    if [[ "$ACTIONS_RUNNER_DEBUG" == 'true' ]]; then
-        sccache --help
-    else
-        sccache --version
-    fi
+if which sccache >/dev/null && [[ "$ACTIONS_RUNNER_DEBUG" == 'true' ]]; then
+    sccache --help
     sccache --show-stats
 fi
