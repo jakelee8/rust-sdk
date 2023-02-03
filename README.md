@@ -51,7 +51,7 @@ RUN --mount=target=. \
 #############################################################################
 
 # Use the target release image
-FROM registry.access.redhat.com/ubi8/ubi-minimal AS release
+FROM debian:bullseye AS release
 
 # Copy the built binaries
 COPY --from=builder /usr/local/bin/* /usr/local/bin/
@@ -75,11 +75,10 @@ docker buildx bake --load local
 
 ### Publish
 
-Login to GitHub and Quay.io:
+Login to GitHub:
 
 ```sh
 docker login ghcr.io
-docker login quay.io
 ```
 
 If you are not using Docker Desktop, install QEMU binaries:
@@ -99,4 +98,3 @@ docker buildx bake --push
 [docker-multiplatform]: https://docs.docker.com/build/buildx/multiplatform-images/
 [docker]: https://www.docker.com/get-started/
 [rust]: https://www.rust-lang.org
-[ubi8]: https://catalog.redhat.com/software/containers/ubi8-minimal/5c64772edd19c77a158ea216
